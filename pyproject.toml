@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "codepilotx"
-version = "0.1.0"
+version = "0.2.0"
 description = "Local AI coding copilot CLI - runs on your own hardware"
 readme = "README.md"
 license = { text = "MIT" }

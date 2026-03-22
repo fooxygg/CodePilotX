@@ -72,11 +72,41 @@ def ask(message: str = typer.Argument(..., help="Pregunta one-shot")):
 
 @app.command()
 def serve(
-    port: int = typer.Option(4444, help="Puerto donde escucha el servidor"),
+    port: int = typer.Option(4444, help="Puerto local del servidor"),
     host: str = typer.Option("0.0.0.0", help="Host"),
+    tunnel: str = typer.Option("", help="Abrir tunel SSH inverso. Ej: ubuntu@IP_VPS"),
+    tunnel_port: int = typer.Option(4444, help="Puerto remoto en la VPS"),
 ):
-    """Inicia el servidor en TU PC para conectarte desde VPS u otro lugar."""
+    """Inicia el servidor + tunel SSH automatico hacia tu VPS."""
+    import threading
+    import subprocess
+    import time
     from .server import start
+
+    if tunnel:
+        def _open_tunnel():
+            rprint(f"[cyan]Conectando tunel SSH → {tunnel}:{tunnel_port}...[/]")
+            time.sleep(2)
+            cmd = [
+                "ssh", "-N", "-o", "StrictHostKeyChecking=no",
+                "-o", "ServerAliveInterval=30",
+                "-o", "ExitOnForwardFailure=yes",
+                "-R", f"{tunnel_port}:localhost:{port}",
+                tunnel,
+            ]
+            while True:
+                try:
+                    result = subprocess.run(cmd)
+                    rprint("[yellow]Tunel caido, reconectando en 5s...[/]")
+                    time.sleep(5)
+                except KeyboardInterrupt:
+                    break
+
+        t = threading.Thread(target=_open_tunnel, daemon=True)
+        t.start()
+        rprint(f"[green]Tunel activo:[/] {tunnel}:{tunnel_port} → localhost:{port}")
+        rprint(f"[dim]Accede desde la VPS en: http://localhost:{tunnel_port}[/]\n")
+
     start(host=host, port=port)
 
 

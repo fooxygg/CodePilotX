@@ -1,3 +1,4 @@
+README.md
 pyproject.toml
 codepilotx/__init__.py
 codepilotx/cli.py
