@@ -1,0 +1,12 @@
+pyproject.toml
+codepilotx/__init__.py
+codepilotx/cli.py
+codepilotx/client.py
+codepilotx/config.py
+codepilotx/server.py
+codepilotx.egg-info/PKG-INFO
+codepilotx.egg-info/SOURCES.txt
+codepilotx.egg-info/dependency_links.txt
+codepilotx.egg-info/entry_points.txt
+codepilotx.egg-info/requires.txt
+codepilotx.egg-info/top_level.txt
